@@ -25,7 +25,7 @@ class SettingForm extends AbstractForm
             ->add('document', 'text',[
                 'label'=>'Cpf/Cnpj'
             ])
-            ->add('cover', 'file',[
+            ->add('file', 'file',[
                 'label'=>'Capa'
             ])
             ->add('address', 'form', [

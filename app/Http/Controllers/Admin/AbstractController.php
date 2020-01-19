@@ -91,6 +91,12 @@ abstract class AbstractController extends Controller
 
         if($this->getModel()->getResultLastId()){
 
+
+            if($this->events){
+
+                event($this->getEvents($this->getModel()->getModel()));
+            }
+
             if(empty($this->route)){
 
                 notify()->success($this->getModel()->getMessage());
@@ -102,6 +108,7 @@ abstract class AbstractController extends Controller
             }
             return redirect()->route(sprintf($this->route, $this->getModel()->getResultLastId()))->with('success', $this->getModel()->getMessage());
         }
+
         notify()->error($this->getModel()->getMessage());
 
         return back()->withInput()->withErrors($this->getModel()->getMessage());

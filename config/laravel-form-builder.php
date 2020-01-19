@@ -46,6 +46,9 @@ return [
 
     'custom_fields' => [
 //        'datetime' => App\Forms\Fields\Datetime::class
-       'privileges' => \App\Forms\Fields\PrivilegeType::class
+       'my-entity' => \App\Forms\Fields\EntityType::class,
+       'privileges' => \App\Forms\Fields\PrivilegeType::class,
+       'cover' => \App\Forms\Fields\CoverType::class,
+       'tags' => \App\Forms\Fields\TagType::class
     ]
 ];

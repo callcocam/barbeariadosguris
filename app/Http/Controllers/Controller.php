@@ -26,6 +26,11 @@ class Controller extends BaseController
     protected $rules;
 
     /**
+     * @var AbstractRequest
+     */
+    protected $events;
+
+    /**
      * @var AbstractForm
      */
     protected $formClass;
@@ -67,5 +72,10 @@ class Controller extends BaseController
 
         return $this->rules->getRules($data);
 
+    }
+
+    protected function getEvents($model){
+
+        return new $this->events($model);
     }
 }

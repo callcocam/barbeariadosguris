@@ -24,13 +24,56 @@ class AutoRouteDbService
     {
         $this->model = $model;
     }
-    public function register()
+
+    public function register($namespace='admin')
     {
         $return = false;
 
         if ($this->model->tableExists()) {
 
-            $myRoute = $this->model->get();
+            $myRoute = $this->model->where('namespace', $namespace)->get();
+
+            $myRoute->each(function (iAutoRouteModel $myRoute) use (&$return) {
+
+                if($myRoute->resource){
+
+                    $this->resources($myRoute);
+                }
+                else{
+
+                    switch ($myRoute->verb):
+                        case 'post':
+                            $this->post($myRoute);
+                            break;
+                        case 'put':
+                            $this->put($myRoute);
+                            break;
+                        case 'delete':
+                            $this->delete($myRoute);
+                            break;
+                        case 'any':
+                            $this->any($myRoute);
+                            break;
+                        default:
+                            $this->get($myRoute);
+                            break;
+                    endswitch;
+
+                }
+
+            });
+        }
+        return $return;
+    }
+
+
+    public function registerApi($namespace='admin')
+    {
+        $return = false;
+
+        if ($this->model->tableExists()) {
+
+            $myRoute = $this->model->where('namespace', $namespace)->get();
 
             $myRoute->each(function (iAutoRouteModel $myRoute) use (&$return) {
 

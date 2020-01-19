@@ -34,6 +34,7 @@ class AutoRouteDbServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->register(RouteServiceProvider::class);
         $this->app->bind(iAutoRouteModel::class, AutoRouteModel::class);
         $this->app->bind(iAutoRouteService::class, AutoRouteDbService::class);
         $this->app->bind('autoRouteDB',

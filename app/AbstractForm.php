@@ -42,10 +42,28 @@ abstract class AbstractForm extends Form
         ]);
 
     }
-protected function addDescription(){
+    protected function addDescription(){
 
         return $this->add('description', 'textarea', [
             'label'=>'Descrição'
+        ]);
+
+    }
+
+    protected function addCover($name="cover"){
+
+        return $this->add($name, 'cover', [
+            'label'=>'Selecione Um Capa',
+            'for'=>$name,
+            'attr'=>[
+                'id'=>'image_label',
+            ],
+            'label_attr_addon'=>[
+                "aria-describedby"=>sprintf("input-group-file-sddon-01", $name),
+                "id"=>"button-image",
+                "class"=>"custom-file-label",
+                "for"=>'image_label'
+            ]
         ]);
 
     }

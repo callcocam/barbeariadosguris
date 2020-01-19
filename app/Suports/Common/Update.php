@@ -57,9 +57,10 @@ trait Update
         $this->model =  $this->findById($id);
 
         $input = array_merge($input, $this->model->toArray());
-
-        $message = sprintf( 'Realizada com sucesso, registro [ %s ] foi atualizado com sucesso!!', $input[Options::DEFAULT_COLUMN_SLUG_ORIGEM]);
-     
+        $message = 'Realizada com sucesso, registro foi atualizado com sucesso!!';
+        if (isset($input[Options::DEFAULT_COLUMN_SLUG_ORIGEM])) {
+            $message = sprintf('Realizada com sucesso, registro [ %s ] foi atualizado com sucesso!!', $input[Options::DEFAULT_COLUMN_SLUG_ORIGEM]);
+        }
         $this->lastId =  $id;
         $this->results['id'] =  $id;
         $this->results['result'] =  true;

@@ -35,6 +35,8 @@ class ShinobiServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->register(RouteServiceProvider::class);
+
         $this->mergeConfigFrom(
             __DIR__.'/config/shinobi.php', 'shinobi'
         );

@@ -64,14 +64,18 @@ class AbstractModel extends ModelAlias
            if($this->updateBy($data, $data['id'])){
               //SITEMA DE TAGS
                $this->initTags($data);
+               //EX RELACIONA CATEGORIAS COM CATEGORIAS
+               $this->initCategorizable($data);
                //EX RELACIONA CATEGORIAS COM POST OU PRODUCTS
-               //$this->initCategorizable($data);
+               $this->initCategory($data);
                //EX RELACIONA VIDEOS COM POST
                //$this->initVideozable($data);
                //RELACIONA UM AVATAR COM O REGISTRO USER OU POST ETC...
                $this->initAvatar($data);
                //RELACIONA UMA CAPA COM O REGISTRO USER OU POST ETC...
                $this->initCover($data);
+               //RELACIONA UMA CAPA COM O REGISTRO USER OU POST ETC...
+               $this->initFile($data);
                //RELACIONA UM ADDRESS COM O REGISTRO USER OU CLIENT ETC...
                $this->initAddress($data);
                //RELACIONA OS ROLES COM USERS
@@ -90,12 +94,16 @@ class AbstractModel extends ModelAlias
             if($this->createBy($data)){
                 //SITEMA DE TAGS
                 $this->initTags($data);
+                //EX RELACIONA CATEGORIAS COM CATEGORIAS
+                $this->initCategorizable($data);
                 //EX RELACIONA CATEGORIAS COM POST OU PRODUCTS
-                //$this->initCategorizable($data);
+                $this->initCategory($data);
                 //EX RELACIONA VIDEOS COM POST
                 //$this->initVideozable($data);
                 //RELACIONA UM AVATAR COM O REGISTRO USER OU POST ETC...
                 $this->initAvatar($data);
+                //RELACIONA UMA CAPA COM O REGISTRO USER OU POST ETC...
+                $this->initFile($data);
                 //RELACIONA UMA CAPA COM O REGISTRO USER OU POST ETC...
                 $this->initCover($data);
                 //RELACIONA UM ADDRESS COM O REGISTRO USER OU CLIENT ETC...
@@ -130,7 +138,7 @@ class AbstractModel extends ModelAlias
     }
 
 
-    public function getCreatedMmDdYyyyAttribute()
+    public function getCreatedMmDdYyyyHisAttribute()
     {
         if (empty($this->created_at)) {
             return null;
@@ -139,6 +147,15 @@ class AbstractModel extends ModelAlias
         return $this->created_at->format('m/d/Y H:i:s');
     }
 
+
+    public function getCreatedMmDdYyyyAttribute()
+    {
+        if (empty($this->created_at)) {
+            return null;
+        }
+
+        return $this->created_at->format('m/d/Y');
+    }
 
     public function setCreatedDateAttribute($value)
     {
@@ -167,6 +184,12 @@ class AbstractModel extends ModelAlias
     public function getResultLastId()
     {
         return $this->lastId;
+    }
+
+    public function getModel(){
+
+        return $this->model;
+
     }
 
 }

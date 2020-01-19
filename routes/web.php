@@ -14,22 +14,23 @@
 Auth::routes(['register'=>false]);
 
 Route::get('/', 'HomeController@index')->name('home');
+Route::get('/passport', 'HomeController@passport')->name('passport');
 Route::get('/home', function (){
 
     return redirect('/');
 })->name('home-redirect');
 
-Route::group(['prefix'=>'/'],function (\Illuminate\Routing\Router $router) {
+Route::group(['prefix'=>'/admin'],function (\Illuminate\Routing\Router $router) {
 
     //BLOCK USERS ADMIN
     $router->get('/', "Admin\\AdminController@index")
         ->name('admin.admin.index');
 
     $router->get('/profile', 'Admin\\ProfileController@profile')
-        ->name('admin.auth.profile.form');
+        ->name('admin.auth.profile.index');
 
     $router->post('/profile', 'Admin\\ProfileController@store')
-        ->name('admin.auth.profile');
+        ->name('admin.auth.profile.store');
 
     $router->get('/empresa', 'Admin\\SettingController@setting')
         ->name('admin.settings.setting')->middleware('can:admin.settings.show');
@@ -40,3 +41,4 @@ Route::group(['prefix'=>'/'],function (\Illuminate\Routing\Router $router) {
     \App\Suports\AutoRoute\Facade\AutoRoute::register();
 
 });
+

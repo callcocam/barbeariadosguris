@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Suports\Activitylog\ActivitylogServiceProvider;
-use App\Suports\Shinobi\ShinobiServiceProvider;
+use App\Modules\ModuleServiceProviders;
+use App\Suports\SuportServiceProviders;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -17,9 +17,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->register(ShinobiServiceProvider::class);
-        $this->app->register(\App\Suports\Notify\NotifyServiceProvider::class);
-        $this->app->register(ActivitylogServiceProvider::class);
+        $this->app->bind('path.public', function () {
+            return base_path("public_html") ;
+        });
+        $this->app->register(SuportServiceProviders::class);
+        $this->app->register(ModuleServiceProviders::class);
 
         include app_path("Suports/helpers.php");
     }
@@ -49,10 +51,10 @@ class AppServiceProvider extends ServiceProvider
                 ->onDelete('cascade');
         });
 
-        Blueprint::macro('user', function(){
-            $this->unsignedBigInteger('user_id')->nullable();
+        Blueprint::macro('user', function($field="user_id"){
+            $this->unsignedBigInteger($field)->nullable();
             $this
-                ->foreign('user_id')
+                ->foreign($field)
                 ->references('id')
                 ->on('users')
                 ->onUpdate('cascade')

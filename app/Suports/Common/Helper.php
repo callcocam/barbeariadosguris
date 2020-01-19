@@ -24,7 +24,13 @@ trait Helper
 
         if (!$this->slug_fixed) {
 
-            $input[Options::DEFAULT_COLUMN_SLUG] = Str::slug($input[Options::DEFAULT_COLUMN_SLUG_ORIGEM]);
+            if (isset($input[Options::DEFAULT_COLUMN_SLUG])) {
+
+                if (isset($input[Options::DEFAULT_COLUMN_SLUG_ORIGEM])) {
+
+                    $input[Options::DEFAULT_COLUMN_SLUG] = Str::slug($input[Options::DEFAULT_COLUMN_SLUG_ORIGEM]);
+                }
+            }
         }
 
         return $input;
@@ -60,6 +66,7 @@ trait Helper
         return $input;
     }
 
+
     protected function initCover(&$input)
     {
 
@@ -68,14 +75,62 @@ trait Helper
             return $input;
 
         }
-        if (!request()->hasFile(Options::DEFAULT_COLUMN_COVER) && !request()->file(Options::DEFAULT_COLUMN_COVER)->isValid()) {
+
+        $image = $input[Options::DEFAULT_COLUMN_COVER];
+
+        array_push($this->fillable,'company_id','uuid');
+
+        $file = new \Intervention\Image\File();
+
+        $info = $file->setFileInfoFromPath($image);
+
+        $remove = sprintf("%s://%s",request()->getScheme(),request()->getHost());
+
+        $fileName = Str::replaceFirst($remove,'',$info->basePath());
+
+        $dirName = Str::replaceFirst($remove,'',$info->dirname);
+
+        $data = [
+            'company_id'=>get_tenant_id(),
+            'uuid'=>\Str::uuid(),
+            'name'=>$info->filename,
+            'fullPath'=>$fileName,
+            'dir'=>$dirName,
+            'fileType'=>$info->mime,
+            'ext'=>$info->extension,
+            'size'=>$info->extension
+        ];
+
+        /**
+         * @var $fileExist MorphOne
+         */
+        $fileExist = $this->model->file();
+
+        if($fileExist->first()):
+            $fileExist->update($data);
+        else:
+            $fileExist->create($data);
+        endif;
+
+        return $input;
+    }
+
+    protected function initFile(&$input)
+    {
+
+        if (!isset($input[Options::DEFAULT_COLUMN_FILE])) {
 
             return $input;
 
         }
-        $image = $input[Options::DEFAULT_COLUMN_COVER];
+        if (!request()->hasFile(Options::DEFAULT_COLUMN_FILE) && !request()->file(Options::DEFAULT_COLUMN_FILE)->isValid()) {
 
-        return $this->initFile($input, $image);
+            return $input;
+
+        }
+        $image = $input[Options::DEFAULT_COLUMN_FILE];
+
+        return $this->upload($input, $image);
     }
 
     protected function initAvatar(&$input)
@@ -94,10 +149,10 @@ trait Helper
         }
         $image = $input[Options::DEFAULT_COLUMN_AVATAR];
 
-        return $this->initFile($input, $image);
+        return $this->upload($input, $image);
     }
 
-    protected function initFile(&$input,UploadedFile  $image)
+    private function upload(&$input,UploadedFile  $image)
     {
 
 
@@ -140,6 +195,7 @@ trait Helper
 
     protected function initTags(&$input)
     {
+
         if (!isset($input['tag'])) {
 
             return $input;
@@ -230,9 +286,11 @@ trait Helper
 
         return $input;
     }
+
+
     protected function initCategorizable(&$input)
     {
-        if (!isset($input['category'])) {
+        if (!isset($input['categories'])) {
 
             return $input;
 
@@ -241,13 +299,27 @@ trait Helper
         if (isset($input['id'])) {
 
             //UPDATE AT CATEGORIA
-            $this->model->recategorize($input['category']);
+            $this->model->recategorize($input['categories']);
 
             return $input;
         }
 
         //CADASTARS AS NOVAS
-        $this->model->categorize($input['category']);
+        $this->model->categorize($input['categories']);
+
+        return $input;
+    }
+
+
+    protected function initCategory(&$input)
+    {
+        if (!isset($input['category'])) {
+
+            return $input;
+
+        }
+        //REMOVE TODAS AS TAGS
+        $this->model->categories()->sync($input['category']);
 
         return $input;
     }
@@ -314,7 +386,7 @@ trait Helper
 
                 if (is_array($value)) :
 
-                    if (in_array($key, ['tag'])) :
+                    if (!in_array($key, ['tags'])) :
 
                         //$input[$key] = json_encode($value);
 

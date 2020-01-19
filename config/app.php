@@ -168,7 +168,7 @@ return [
         /*
          * Package Service Providers...
          */
-        \App\Suports\AutoRoute\AutoRouteDbServiceProvider::class,
+       // Alexusmai\LaravelFileManager\FileManagerServiceProvider::class,
 
         /*
          * Application Service Providers...

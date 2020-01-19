@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Forms\EmailRequestForm;
+use App\Forms\Auth\EmailRequestForm;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Kris\LaravelFormBuilder\FormBuilder;

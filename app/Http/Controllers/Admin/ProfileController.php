@@ -43,7 +43,7 @@ class ProfileController extends AbstractController
         $this->results['form'] = $form;
         $form->setFormOption('model',$rows);
         $form->setFormOption('method','POST');
-        $form->setFormOption('url',route('admin.auth.profile'));
+        $form->setFormOption('url',route('admin.auth.profile.store'));
         return view(sprintf('admin.%s.show', $this->template), $this->results);
     }
 

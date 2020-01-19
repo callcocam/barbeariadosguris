@@ -29,6 +29,7 @@ class AutoRouteModel extends AbstractModel implements iAutoRouteModel
         'controller',
         'method',
         'middleware',
+        'namespace',
         'resource',
         'description',
         'updated_at'
